@@ -2,13 +2,10 @@ from fastapi import status, Depends
 from fastapi_jwt_auth import AuthJWT
 from fastapi.exceptions import HTTPException
 from dotenv import load_dotenv
-
-load_dotenv()
 import string
 import random
 
-
-
+load_dotenv()
 
 class AuthHelper:
     @staticmethod
