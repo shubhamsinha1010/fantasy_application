@@ -1,5 +1,5 @@
-from pydantic import BaseModel
 from typing import Optional
+from pydantic import BaseModel
 
 
 class SignUpSchema(BaseModel):
@@ -28,9 +28,12 @@ class SignUpSchema(BaseModel):
         }
 
 
-
-
 class LoginSchema(BaseModel):
     """Schema which specifies the fields required as an input"""
-    username:str
-    password:str
+    username: str
+    password: str
+
+
+class TokenSchema(BaseModel):
+
+   token: str

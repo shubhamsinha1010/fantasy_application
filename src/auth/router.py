@@ -1,8 +1,9 @@
 from fastapi import APIRouter, status, Depends
-from .schemas import SignUpSchema, LoginSchema
-from fantasy_application.src.auth.models import User
+from .schemas import SignUpSchema, LoginSchema, TokenSchema
+from fantasy_application.src.auth.models import User, session
 from fastapi_jwt_auth import AuthJWT
 from fastapi.encoders import jsonable_encoder
+from starlette.responses import JSONResponse
 from .auth_helper import AuthHelper
 from fastapi.exceptions import HTTPException
 
@@ -53,7 +54,30 @@ async def login(user: LoginSchema, Authorize: AuthJWT = Depends()):
     return User.user_credential_validation(db_user, user, Authorize)
 
 
+@auth_router.post("/send-email")
+async def simple_send(Authorize: AuthJWT = Depends()) -> JSONResponse:
+    AuthHelper.user_token_authenticator(Authorize)
+    username = Authorize.get_jwt_subject()
+    user = User.get_user_by_column(User.username, username)
+    if user.is_email_verified:
+        return "Your email is already verified"
 
+    AuthHelper.send_email(User,username,"sinhashubham1911@gmail.com","bayaxiumjrkrgaqd")
+
+    return "email successfully sent"
+
+
+@auth_router.post("/verify-email")
+async def verify_email(token: TokenSchema, Authorize: AuthJWT = Depends()) -> str:
+    AuthHelper.user_token_authenticator(Authorize)
+    username = Authorize.get_jwt_subject()
+    user = User.get_user_by_column(User.username, username)
+    if user.auth_code == token.token:
+        user.is_email_verified = True
+        session.commit()
+        return "Email verified_successfully"
+
+    return "Authorization code entered by you was incorrect"
 
 
 # refreshing tokens

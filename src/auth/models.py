@@ -26,6 +26,8 @@ class User(Base):
     is_above_18 = Column(Boolean, default=True)
     is_active = Column(Boolean, default=False)
     is_staff = Column(Boolean, default=False)
+    auth_code = Column(Text,default="")
+    is_email_verified = Column(Boolean,default=False)
 
     @classmethod
     def get_user_by_column(cls, column, schema_key):
@@ -36,7 +38,7 @@ class User(Base):
                            is_staff, is_referral_valid=False,
                            ):
         bonus_amount = 100 if is_referral_valid else 0
-        ref_code = AuthHelper.generate_referal_code()
+        ref_code = AuthHelper.generate_referal_code(8)
         return User(
             username=username,
             email=email,
