@@ -4,7 +4,7 @@ import os
 from database import Base,engine
 from fastapi_mail import ConnectionConfig
 from fantasy_application.src.auth.models import User
-from fantasy_application.src.contest.models import Contest
+from fantasy_application.src.match.models import Match
 
 load_dotenv()
 
